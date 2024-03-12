@@ -2,7 +2,8 @@ import logging
 import os
 import typing
 
-from flask import Flask, request
+from flask import Flask
+from flask import request
 
 
 def run_server(handlers: typing.Dict):
@@ -26,7 +27,7 @@ def run_server(handlers: typing.Dict):
     @app.post("/end")
     def on_end():
         game_state = request.get_json()
-        handlers["end"](game_state)
+        handlers["end"](game_state) 
         return "ok"
 
     @app.after_request
@@ -42,4 +43,4 @@ def run_server(handlers: typing.Dict):
     logging.getLogger("werkzeug").setLevel(logging.ERROR)
 
     print(f"\nRunning Battlesnake at http://{host}:{port}")
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, debug=True)
