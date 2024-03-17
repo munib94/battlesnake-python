@@ -36,7 +36,7 @@ class Node:
         self.g = float('inf')
         self.h = 0
 
-def trace_path(node_details: Node, goal: dict)  -> list[tuple[int, int]]:
+def trace_path(node_details: Node, goal: dict) -> list:
     """
     Traces the path from source to destination.
 
@@ -70,12 +70,12 @@ def trace_path(node_details: Node, goal: dict)  -> list[tuple[int, int]]:
         # Print the path
         for i in path:
             print("->", i, end=" ")
-        print()
+        # print()
 
     return path
 
 
-def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list[tuple, float16] | None:
+def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None:
     """
     Implement the A* search algorithm.
 
@@ -156,7 +156,7 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list[tuple,
                     # Trace and print the path from source to destination
                     path = trace_path(node_details, dest)
                     found_dest = True
-                    return [path[1], node_details[new_i][new_j].f]
+                    return path
                 else:
                     # Calculate the new f, g, and h values
                     g_new = node_details[i][j].g + 1.0
@@ -178,27 +178,3 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list[tuple,
     if not found_dest:
         print("Failed to find the destination node")
         return None # Exit and move to next food
-
-def main():
-	# Define the grid (1 for unblocked, 0 for blocked)
-	grid = [
-		[1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
-		[1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
-		[1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
-		[0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
-		[1, 1, 1, 0, 1, 1, 1, 0, 1, 0],
-		[1, 0, 1, 1, 1, 1, 0, 1, 0, 0],
-		[1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-		[1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
-		[1, 1, 1, 0, 0, 0, 1, 0, 0, 1]
-	]
-
-	# Define the source and destination
-	src = [8, 0]
-	dest = [0, 0]
-
-	# Run the A* search algorithm
-	a_star_search(grid, src, dest)
-
-if __name__ == "__main__":
-	main()

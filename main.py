@@ -14,7 +14,7 @@ import random
 import typing
 import sys
 
-from a_star import a_star_search
+from a_star import a_star_search, Node, trace_path
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
@@ -51,17 +51,20 @@ def move(game_state: typing.Dict) -> typing.Dict:
     start = game_state["you"]["head"]
 
     possible_moves = []
-    f_scores = []
-    # Perform A* search for all foods
+    path_lengths = []
+    # Perform A* search for all foods. This will return optimal paths for to all foods.
     for food in foods:
         result = a_star_search(game_state, start, food)
         if result is not None:
-            possible_moves.append(result[0])
-            f_scores.append(result[1])
+            possible_moves.append(result)
+            path_lengths.append(len(result))
+
     
-    # Get lowest f_score and corresponding move
-    best_f_score = min(f_scores)
-    best_move = possible_moves[f_scores.index(best_f_score)]
+    # Get shortest path from all possible paths and the corresponding next move
+    # best_move = possible_moves[f_scores.index(best_f_score)]
+    shortest_path = min(path_lengths)
+    best_path = possible_moves[path_lengths.index(shortest_path)]
+    best_move = best_path[1]
     row, col = best_move[0] - start["x"], best_move[1] - start["y"]
     if row == 1:
         next_move = "down"
