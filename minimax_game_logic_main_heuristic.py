@@ -49,14 +49,16 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
     # Head coordinates of other snakes
     other_snakes_heads = [snake['body'][0]
                           for snake in game_state['board']['snakes']]
-    # Body coordinates of other snakes
-    other_snakes_next_head_location = [other_snakes_heads['body'][0]['x'+1, 'y'], other_snakes_heads['body'][0]
-                                       ['x' - 1, 'y'], other_snakes_heads['body'][0]['x', 'y'+1], other_snakes_heads['body'][0]['x', 'y' - 1]]
+    # Coordinates of other snakes next head location
+    # other_snakes_head_next = [other_snakes_heads['x'+1, 'y'], other_snakes_heads['x' - 1, 'y'], other_snakes_heads['x', 'y'+1], other_snakes_heads['x', 'y' - 1]]
     # Define the possible moves
     possible_moves = ['up', 'down', 'left', 'right']
     safe_moves = []
 
     # Check each possible move for safety
+    # for i in range(4):
+    # next_x, next_y = other_snakes_heads['x'], other_snakes_heads['y']
+    # if not (my)
     for move in possible_moves:
         new_x, new_y = my_head['x'], my_head['y']
         if move == 'up':
@@ -74,12 +76,19 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
             if not any(part['x'] == new_x and part['y'] == new_y for part in my_body):
                 # Check if the move doesn't collide with another snake's body
                 if not any(part['x'] == new_x and part['y'] == new_y for snake in game_state['board']['snakes'] for part in snake['body']):
-                    # Check if the move doesn't collide with other snake's head next move
-                    if not any(part['x'] == new_x and part['y'] == new_y for snake in game_state['board']['snakes'] for part in snake['body'] if part in other_snakes_next_head_location):
-                        # If the move is safe, add it to the list of safe moves
-                        safe_moves.append(move)
-
-    # Accept head-to-head collision if our snake is longer than the other snake
+                    # Check if the move doesn't collide with other snake's head next move ( Remove all head-to-head collisions, add back below)
+                    #    if not any(other_snakes_heads['x'] == new_x and other_snakes_heads['y'] == new_y for snake in game_state['board']['snakes']):
+                    # If the move is safe, add it to the list of safe moves
+                    safe_moves.append(move)
+    next_moves = []
+    for i in range(4):
+        next_x, next_y = other_snakes_heads['x'], other_snakes_head['y']
+        next_1 = new_x += 1
+        next_2 = new_x -= 1
+        next_3 = new_y += 1
+        next_4 = new_y -= 1
+        if move == 'up':
+            # Accept head-to-head collision if our snake is longer than the other snake
     for move in possible_moves:
         new_x, new_y = my_head['x'], my_head['y']
         if move == 'up':
@@ -92,6 +101,7 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
             new_x += 1
 
         if my_head == other_snakes_heads and len(my_body) > len(game_state['board']['snakes']['body']):
+            # add back safe moves for next move if head-to-head and my snake is longer
             safe_moves.append(move)
 
     return safe_moves
@@ -216,11 +226,11 @@ def heuristic(game_state: typing.Dict) -> float:
     # score -= max(10 - distance_to_snake, 0) / 10.0
 
     # Encourage getting closer to food if health is below a certain threshold
-    if my_health < 60 and game_state['board']['food']:
-        closest_food_distance = min(manhattan_distance(my_head, food)
-                                    for food in game_state['board']['food'])
-        # The closer the food, the higher the score, especially when health is low
-        score += 10 / (closest_food_distance + 1)
+    # if my_health < 60 and game_state['board']['food']:
+    closest_food_distance = min(manhattan_distance(
+        my_head, food) for food in game_state['board']['food'])
+    # The closer the food, the higher the score, especially when health is low
+    score += 10 / (closest_food_distance + 1)
 
     return score
 
