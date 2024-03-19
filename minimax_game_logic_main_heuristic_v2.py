@@ -71,29 +71,40 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
                 safe_moves.append(move)
 
         # Prioritize food if health is low
-        if game_state['you']['health'] < 50:
-            food_positions = game_state['board']['food']
-            if food_positions:  # Check if there is food available
-                food_directions = prioritize_food(my_head, food_positions, safe_moves)
-                if food_directions:  # If there are safe moves leading to food, prioritize them
-                    return food_directions
+        # if game_state['you']['health'] < 60:
+        #     food_positions = game_state['board']['food']
+        #     if food_positions:  # Check if there is food available
+        #         food_directions = prioritize_food(my_head, food_positions, safe_moves)
+        #         if food_directions:  # If there are safe moves leading to food, prioritize them
+        #             return food_directions
 
     return safe_moves
 
-def prioritize_food(head: dict, food_positions: list, safe_moves: list) -> list:
-    # Find the closest piece of food
-    closest_food = min(food_positions, key=lambda food: manhattan_distance(head, food))
-    preferred_moves = []
-    # Determine which moves will bring us closer to the closest food
-    if closest_food['x'] < head['x'] and 'left' in safe_moves:
-        preferred_moves.append('left')
-    elif closest_food['x'] > head['x'] and 'right' in safe_moves:
-        preferred_moves.append('right')
-    if closest_food['y'] < head['y'] and 'down' in safe_moves:
-        preferred_moves.append('down')
-    elif closest_food['y'] > head['y'] and 'up' in safe_moves:
-        preferred_moves.append('up')
-    return preferred_moves or safe_moves  # Return preferred moves, but fallback to safe_moves if none are preferred
+# def prioritize_food(head: dict, food_positions: list, safe_moves: list, game_state: typing.Dict) -> list:
+#     closest_food = min(food_positions, key=lambda food: manhattan_distance(head, food))
+#     preferred_moves = []
+
+#     # Consider the snake's current health
+#     health = game_state['you']['health']
+
+#     for move in safe_moves:
+#         new_head = dict(head)  # Copy current head position
+#         if move == 'up':
+#             new_head['y'] -= 1
+#         elif move == 'down':
+#             new_head['y'] += 1
+#         elif move == 'left':
+#             new_head['x'] -= 1
+#         elif move == 'right':
+#             new_head['x'] += 1
+        
+#         # Prioritize moves that do not lead into dead-ends and are closer to food
+#         if not is_dead_end(new_head, game_state) and manhattan_distance(new_head, closest_food) < manhattan_distance(head, closest_food):
+#             preferred_moves.append(move)
+    
+#     # Return moves that head towards food and do not result in immediate dead-ends
+#     return preferred_moves or safe_moves  # If no preferred moves, fallback to original safe moves
+
 
 
 def is_dead_end(head, game_state):
@@ -186,13 +197,14 @@ def heuristic(game_state: typing.Dict) -> float:
             distance_to_snake = manhattan_distance(my_head, snake['body'][0])
             score -= max(10 - distance_to_snake, 0) / 10.0  # Penalize based on closeness to other snakes
 
+    
     # If low on health, prioritize food more
     if my_health < 50 and game_state['board']['food']:
         closest_food_distance = min(manhattan_distance(my_head, food) for food in game_state['board']['food'])
         # score += 10 / (closest_food_distance + 1)  # Increase score based on proximity to food when health is low
         # Adjust scoring for health urgency
         if my_health < 15:  # Increase urgency
-            score += 25 / (closest_food_distance + 1)  # Much more aggressive towards food when health is critically low
+            score += 20 / (closest_food_distance + 1)  # Much more aggressive towards food when health is critically low
         elif my_health < 25:  # Increase urgency
             score += 15 / (closest_food_distance + 1)  # More aggressive towards food when health is critically low
         elif my_health < 50:
