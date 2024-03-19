@@ -1,6 +1,5 @@
 # Adapted from https://www.geeksforgeeks.org/a-search-algorithm/
 
-import math
 import heapq
 import typing
 
@@ -9,6 +8,8 @@ from numpy import float16
 from helpers import is_valid, is_unblocked, is_destination, calculate_h_value
 
 # Define the Cell class
+
+
 class Node:
     """
     Defines the node class.
@@ -36,7 +37,8 @@ class Node:
         self.g = float('inf')
         self.h = 0
 
-def trace_path(node_details: Node, goal: dict) -> list:
+
+def trace_path(node_details: Node, goal: dict) -> list[tuple[int, int]]:
     """
     Traces the path from source to destination.
 
@@ -45,11 +47,11 @@ def trace_path(node_details: Node, goal: dict) -> list:
         Information about the node.
         dest:
         The goal node.
-        
+
     Returns:
         The full path from the start node to goal node.
     """
-    print("The Path is ")
+    print("The Path is \n")
     path = []
     row = goal["x"]
     col = goal["y"]
@@ -70,12 +72,12 @@ def trace_path(node_details: Node, goal: dict) -> list:
         # Print the path
         for i in path:
             print("->", i, end=" ")
-        # print()
+        print("\n")
 
     return path
 
 
-def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None:
+def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list[tuple[int, int]] | None:
     """
     Implement the A* search algorithm.
 
@@ -86,32 +88,34 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None
         The starting node position.
         dest:
         The goal node position.
-        
+
     Returns:
-        If a path is found, then the function will return a list containing the next move and the f score for that path.
+        If a path is found, then the function will return a list containing the path to the goal node.
         If a path is not found, then return None.
     """
     # Obtain the game height and width
     board_height = game_state["board"]["height"]
     board_width = game_state["board"]["width"]
-	
+
     # Get current game state information about self and other snakes
     snakes = game_state["board"]["snakes"]
 
     # Check if the destination is unblocked
     if not is_unblocked(snakes, dest["x"], dest["y"]):
-        print("Destination is blocked")
-        return None # Exit and check path to next food
+        print("Destination is blocked \n")
+        return None  # Exit and check path to next food
 
     # Check if we are already at the destination
     if is_destination(src["x"], src["y"], dest):
-        print("We are already at the destination")
-        return None # Exit and check path to next food
+        print("We are already at the destination \n")
+        return None  # Exit and check path to next food
 
     # Initialize the closed list (visited nodes)
-    closed_list = [[False for _ in range(board_width)] for _ in range(board_height)]
+    closed_list = [[False for _ in range(board_width)]
+                   for _ in range(board_height)]
     # Initialize the details of each node
-    node_details = [[Node() for _ in range(board_width)] for _ in range(board_height)]
+    node_details = [[Node() for _ in range(board_width)]
+                    for _ in range(board_height)]
 
     # Initialize the start node details
     i = src["x"]
@@ -129,7 +133,7 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None
     # Initialize the flag for whether destination is found
     found_dest = False
 
-	# Main loop of A* search algorithm
+    # Main loop of A* search algorithm
     while len(open_list) > 0:
         # Pop the node with the smallest f value from the open list
         p = heapq.heappop(open_list)
@@ -140,7 +144,8 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None
         closed_list[i][j] = True
 
         # For each direction, check the successors
-        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)] # Corresponds to RIGHT, LEFT, DOWN, UP
+        # Corresponds to UP, DOWN, RIGHT, LEFT
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         for dir in directions:
             new_i = i + dir[0]
             new_j = j + dir[1]
@@ -152,7 +157,7 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None
                     # Set the parent of the destination cell
                     node_details[new_i][new_j].parent_i = i
                     node_details[new_i][new_j].parent_j = j
-                    print("The destination cell is found")
+                    print("The destination cell is found \n")
                     # Trace and print the path from source to destination
                     path = trace_path(node_details, dest)
                     found_dest = True
@@ -176,5 +181,5 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list | None
 
     # If the destination is not found after visiting all nodes
     if not found_dest:
-        print("Failed to find the destination node")
-        return None # Exit and move to next food
+        print("Failed to find the destination node \n")
+        return None  # Exit and move to next food

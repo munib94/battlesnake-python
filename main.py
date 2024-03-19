@@ -52,14 +52,13 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     possible_moves = []
     path_lengths = []
-    # Perform A* search for all foods. This will return optimal paths for to all foods.
+    # Perform A* search for all foods. This will return optimal paths to all foods.
     for food in foods:
         result = a_star_search(game_state, start, food)
         if result is not None:
             possible_moves.append(result)
             path_lengths.append(len(result))
 
-    
     # Get shortest path from all possible paths and the corresponding next move
     # best_move = possible_moves[f_scores.index(best_f_score)]
     shortest_path = min(path_lengths)
@@ -67,16 +66,16 @@ def move(game_state: typing.Dict) -> typing.Dict:
     best_move = best_path[1]
     row, col = best_move[0] - start["x"], best_move[1] - start["y"]
     if row == 1:
-        next_move = "down"
-    if row == -1:
-        next_move = "up"
-    if col == 1:
         next_move = "right"
-    if col == -1:
+    elif row == -1:
         next_move = "left"
+    elif col == 1:
+        next_move = "up"
+    elif col == -1:
+        next_move = "down"
 
     print(f"MOVE {game_state['turn']}: {next_move}")
-    return {"move": next_move}
+    return {"move": next_move or "down"}
 
 
 # Start server when `python main.py` is run
