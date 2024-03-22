@@ -74,8 +74,6 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
             new_x += 1
 
         # Check if the move is within the boundaries of the board
-        next_x = other_snakes_heads[0]['x']
-        next_y = other_snakes_heads[0]['y']
         if 0 <= new_x < board_width and 0 <= new_y < board_height:
             # Check if the move doesn't collide with our snake's body
             if not any(part['x'] == new_x and part['y'] == new_y for part in my_body):
@@ -84,24 +82,24 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
                     # Check if the move doesn't collide with other snake's head next move ( Remove all head-to-head collisions, add back below)
                     safe_moves.append(move)
 
-    # Accept head-to-head collision if our snake is longer than the other snake
-    for move in possible_moves:
-        new_x, new_y = my_head['x'], my_head['y']
-        if move == 'up':
-            new_y += 1
-        elif move == 'down':
-            new_y -= 1
-        elif move == 'left':
-            new_x -= 1
-        elif move == 'right':
-            new_x += 1
+    next_x, next_y = other_snakes_heads[0]['x'], other_snakes_heads[0]['y']
+    new_x, new_y = my_head['x'], my_head['y']
+    opponent_next_move = [[next_x + 1, next_y], [next_x - 1,
+                                                 next_y], [next_x, next_y + 1], [next_x, next_y - 1]]
+    my_next_move = [[new_x + 1, new_y], [new_x - 1, new_y],
+                    [new_x, new_y + 1], [new_x, new_y - 1]]
 
-        if my_head == other_snakes_heads and len(my_body) > len(game_state['board']['snakes']['body']):
-            # add back safe moves for next move if head-to-head and my snake is longer
-            safe_moves.append(move)
+    for o_next_move in opponent_next_move:
+        if o_next_move == my_next_move[0] and "right" in safe_moves:
+            safe_moves.remove("right")
+        if o_next_move == my_next_move[1] and "left" in safe_moves:
+            safe_moves.remove("left")
+        if o_next_move == my_next_move[2] and "up" in safe_moves:
+            safe_moves.remove("up")
+        if o_next_move == my_next_move[3] and "down" in safe_moves:
+            safe_moves.remove("down")
 
     return safe_moves
-
 # Applies a move to the game state and returns the new state
 
 
