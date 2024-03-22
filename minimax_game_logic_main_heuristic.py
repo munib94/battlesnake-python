@@ -58,10 +58,6 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
     possible_moves = ['up', 'down', 'left', 'right']
     safe_moves = []
 
-    # Check each possible move for safety
-    # for i in range(4):
-    # next_x, next_y = other_snakes_heads['x'], other_snakes_heads['y']
-    # if not (my)
     for move in possible_moves:
         new_x, new_y = my_head['x'], my_head['y']
         if move == 'up':
