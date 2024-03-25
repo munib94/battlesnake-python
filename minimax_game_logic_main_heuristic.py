@@ -16,7 +16,7 @@ NEGATIVE_INFINITY = -float('inf')
 def info() -> typing.Dict:
     return {
         "apiversion": "1",
-        "author": "",  # Your Battlesnake Username
+        "author": "Team 8",  # Your Battlesnake Username
         "color": "#888888",  # Choose color
         "head": "default",  # Choose head
         "tail": "default",  # Choose tail

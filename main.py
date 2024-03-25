@@ -1,5 +1,6 @@
 import random
 import typing
+import sys
 
 
 # info is called when you create your Battlesnake on play.battlesnake.com
@@ -7,7 +8,7 @@ import typing
 def info() -> typing.Dict:
     return {
         "apiversion": "1",
-        "author": "",  # Your Battlesnake Username
+        "author": "Team 8",  
         "color": "#888888",  # Choose color
         "head": "default",  # Choose head
         "tail": "default",  # Choose tail
