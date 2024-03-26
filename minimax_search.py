@@ -1,9 +1,9 @@
-import random
 import typing
 import copy
+
 import numpy as np
 
-# THis code is working well.
+from helpers import manhattan_distance, is_point_on_board, is_terminal
 
 
 # Constants for heuristic evaluation
@@ -11,31 +11,17 @@ POSITIVE_INFINITY = float('inf')
 NEGATIVE_INFINITY = -float('inf')
 
 
-# info is called when you create your Battlesnake on play.battlesnake.com
-# and controls your Battlesnake's appearance
-def info() -> typing.Dict:
-    return {
-        "apiversion": "1",
-        "author": "Team 8",  # Your Battlesnake Username
-        "color": "#888888",  # Choose color
-        "head": "default",  # Choose head
-        "tail": "default",  # Choose tail
-    }
-
-def start(game_state: typing.Dict):
-    print("GAME START")
-
-def end(game_state: typing.Dict):
-    print("GAME OVER\n")
-
-# Determines if the game state is a terminal state (either because the game is over or a certain depth has been reached)
-def is_terminal(game_state: typing.Dict) -> bool:
-    # Check if our snake is still alive in the game state
-    return game_state['you']['health'] == 0
-
-
-# Returns a list of safe move directions that do not immediately lead to death
 def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
+    """
+    Gets a list of safe move directions that do not immediately lead to death.
+
+    Args:
+      game_state:
+        Information about the state space of the game.
+
+    Returns:
+      A list of possible moves.
+    """
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
     my_head = game_state['you']['body'][0]  # Head of our snake
@@ -65,8 +51,20 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
 
     return safe_moves
 
-# Applies a move to the game state and returns the new state
+
 def apply_move(game_state: typing.Dict, move: str) -> typing.Dict:
+    """
+    Applies a move to the game state and returns the new state.
+
+    Args:
+      game_state:
+        Information about the state space of the game.
+      move:
+        The direction to move in.
+
+    Returns:
+      The new game state after the move.
+    """
     # Clone the game state to avoid mutating the original state
     new_state = copy.deepcopy(game_state)
     head = new_state['you']['body'][0]
@@ -90,16 +88,20 @@ def apply_move(game_state: typing.Dict, move: str) -> typing.Dict:
     # Return the new game state after the move
     return new_state
 
-# Helper function to calculate the Manhattan distance between two points
-def manhattan_distance(a, b):
-    return abs(a['x'] - b['x']) + abs(a['y'] - b['y'])
 
-# Helper function to check if a point is on the board
-def is_point_on_board(point, width, height):
-    return 0 <= point['x'] < width and 0 <= point['y'] < height
+def calculate_area_control(game_state: typing.Dict, head: dict) -> int:
+    """
+    Estimates the area of the board controlled by our snake.
 
-# Helper function to estimate the area of the board controlled by our snake
-def calculate_area_control(game_state, head):
+    Args:
+      game_state:
+        Information about the state space of the game.
+      head:
+        The head of the snake.
+
+    Returns:
+      Number of squares on the board controlled by our snake.
+    """
     board_width = game_state['board']['width']
     board_height = game_state['board']['height']
     # Create a grid to represent the board
@@ -128,8 +130,19 @@ def calculate_area_control(game_state, head):
                 queue.append(neighbor)
     return area
 
-# The heuristic function
-def heuristic(game_state: typing.Dict) -> float:
+
+# The evaluation heuristic function
+def evaluation_heuristic(game_state: typing.Dict) -> float:
+    """
+    Defines what is considered a winning score according to some heuristics.
+
+    Args:
+      game_state:
+        Information about the state space of the game.
+
+    Returns:
+      A value calculated by some heuristics.
+    """
     my_snake = game_state['you']
     my_health = my_snake['health']
     my_head = my_snake['body'][0]
@@ -158,12 +171,26 @@ def heuristic(game_state: typing.Dict) -> float:
     return score
 
 
+def minimax(game_state: typing.Dict, depth: int, maximizing_player: bool=True) -> typing.Tuple[float, str | None]:
+    """
+    An adversarial search algorithm that tries to maximize a score while assuming that an opposing agent is
+    trying to minimize the score.
 
-def minimax(game_state: typing.Dict, depth: int, maximizingPlayer: bool) -> typing.Tuple[float, str]:
+    Args:
+      game_state:
+        Information about the state space of the game.
+      depth:
+        The depth of the search tree.
+      maximizing_player:
+        The player doing the maximizing.
+
+    Returns:
+      The best move and its associated value.
+    """
     # Base case: if we've reached the maximum depth or the game is over, evaluate the game state
     if depth == 0 or is_terminal(game_state):
-        return heuristic(game_state), None
-    if maximizingPlayer:
+        return evaluation_heuristic(game_state), None
+    if maximizing_player:
         # Initialize the best value to the lowest possible number
         value = NEGATIVE_INFINITY
         # Initialize the best move to None
@@ -197,15 +224,3 @@ def minimax(game_state: typing.Dict, depth: int, maximizingPlayer: bool) -> typi
             
         # Return the best value and move found for the minimizing player
         return value, best_move
-
-
-def move(game_state: typing.Dict) -> typing.Dict:
-    # Replace the original random move selection with minimax algorithm
-    _, next_move = minimax(game_state, depth=3, maximizingPlayer=True)  # adjust the depth accordingly
-    print(next_move)
-    return {"move": next_move or "down"}  # Fallback to "down" if no move is found
-
-
-if __name__ == "__main__":
-    from server import run_server
-    run_server({"info": info, "start": start, "move": move, "end": end})
