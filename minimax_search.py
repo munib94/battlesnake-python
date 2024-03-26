@@ -1,5 +1,4 @@
 import typing
-import copy
 
 import numpy as np
 from collections import deque
