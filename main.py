@@ -11,6 +11,7 @@
 # For more info see docs.battlesnake.com
 
 import typing
+import sys
 
 from minimax_search import minimax
 
