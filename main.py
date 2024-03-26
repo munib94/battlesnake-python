@@ -50,11 +50,11 @@ if __name__ == "__main__":
     from server import run_server
 
     # Run on official server
-    run_server({"info": info, "start": start, "move": move, "end": end})
+    # run_server({"info": info, "start": start, "move": move, "end": end})
 
     # Run on local server
-    # port = "8000"
-    # for i in range(len(sys.argv) - 1):
-    #     if sys.argv[i] == '--port':
-    #         port = sys.argv[i+1]
-    # run_server({"info": info, "start": start, "move": move, "end": end, "port": port})
+    port = "8000"
+    for i in range(len(sys.argv) - 1):
+        if sys.argv[i] == '--port':
+            port = sys.argv[i+1]
+    run_server({"info": info, "start": start, "move": move, "end": end, "port": port})
