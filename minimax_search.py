@@ -5,6 +5,7 @@ import numpy as np
 from collections import deque
 
 from helpers import manhattan_distance, is_point_on_board, is_terminal
+from a_star import a_star_search, Node, trace_path
 
 
 # Constants for heuristic evaluation
@@ -245,6 +246,13 @@ def minimax(game_state: typing.Dict, depth: int, alpha: float=NEGATIVE_INFINITY,
     Returns:
       The best move and its associated value.
     """
+    # Get list of food nodes
+    foods = game_state["board"]["food"]
+    start = game_state["you"]["head"]
+
+    max_possible_paths = []
+    min_possible_paths = []
+
     # Base case: if we've reached the maximum depth or the game is over, evaluate the game state
     if depth == 0 or is_terminal(game_state):
         return evaluation_heuristic(game_state), None
@@ -253,10 +261,19 @@ def minimax(game_state: typing.Dict, depth: int, alpha: float=NEGATIVE_INFINITY,
         value = NEGATIVE_INFINITY
         # Initialize the best move to None
         best_move = None
-        # Explore all possible safe moves for the maximizing player 
-        for move_option in get_safe_moves(game_state):
+
+        # Perform A* search for all foods. This will return optimal paths to all foods.
+        for food in foods:
+            result = a_star_search(game_state, start, food)
+            if result is not None:
+                max_possible_paths.append(result)
+
+        # Explore all possible safe moves for the maximizing player
+        for max_possible_path in max_possible_paths:
+            # Get the next possible move
+            move_option = max_possible_path[1]
             # Apply the move to get a new game state
-            new_state = apply_move(game_state, move_option)
+            new_state = apply_move(game_state, move_option) 
             # Recursively call minimax for the new state, decreasing the depth
             new_value, _ = minimax(new_state, depth-1, alpha, beta, False)
             # Update the best value - maximum and move if the new value is better
@@ -273,18 +290,27 @@ def minimax(game_state: typing.Dict, depth: int, alpha: float=NEGATIVE_INFINITY,
         value = POSITIVE_INFINITY
         # Initialize the best move to None
         best_move = None
+
+        # Perform A* search for all foods. This will return optimal paths to all foods.
+        for food in foods:
+            result = a_star_search(game_state, start, food)
+            if result is not None:
+                min_possible_paths.append(result)
+
         # Explore all possible safe moves for the minimizing player
-        for move_option in get_safe_moves(game_state):
+        for min_possible_path in min_possible_paths:
+            # Get the next possible move
+            move_option = min_possible_path[1]
             # Apply the move to get a new game state
-            new_state = apply_move(game_state, move_option)
+            new_state = apply_move(game_state, move_option) 
             # Recursively call minimax for the new state, decreasing the depth
-            new_value, _ = minimax(new_state, depth-1, alpha, beta, True)
-            # Update the best value - minimum and move if the new valued is better for the minimizing player
-            if new_value < value:
+            new_value, _ = minimax(new_state, depth-1, alpha, beta, False)
+            # Update the best value - maximum and move if the new value is better
+            if new_value > value:
                 value, best_move = new_value, move_option
-            beta = min(beta, value)
-            if beta <=alpha:
-                break # Alpha cutoff
+            alpha = max(alpha, value)
+            if alpha >= beta:
+                break # Beta cutoff
         
         # Return the best value and move found for the minimizing player
         return value, best_move

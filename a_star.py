@@ -16,15 +16,15 @@ class Node:
 
     Attributes:
         parent_i:
-        The x position of the parent node.
+          The x position of the parent node.
         parent_j:
-        The y position of the parent node.
+          The y position of the parent node.
         f:
-        The total cost from the start node to the goal node (g + h).
+          The total cost from the start node to the goal node (g + h).
         g:
-        The actual cost from the start node to the current node.
+          The actual cost from the start node to the current node.
         h:
-        The heuristic cost from the current node to the goal node
+          The heuristic cost from the current node to the goal node
     """
 
     def __init__(self):
@@ -43,13 +43,13 @@ def trace_path(node_details: Node, goal: dict) -> list[tuple[int, int]]:
     Traces the path from source to destination.
 
     Args:
-        node_details:
+      node_details:
         Information about the node.
-        dest:
+      dest:
         The goal node.
 
     Returns:
-        The full path from the start node to goal node.
+      The full path from the start node to goal node.
     """
     print("The Path is \n")
     path = []
@@ -82,16 +82,16 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list[tuple[
     Implement the A* search algorithm.
 
     Args:
-        game_state:
+      game_state:
         Information about the state space of the game.
-        src:
+      src:
         The starting node position.
-        dest:
+      dest:
         The goal node position.
 
     Returns:
-        If a path is found, then the function will return a list containing the path to the goal node.
-        If a path is not found, then return None.
+      If a path is found, then the function will return a list containing the path to the goal node.
+      If a path is not found, then return None.
     """
     # Obtain the game height and width
     board_height = game_state["board"]["height"]
