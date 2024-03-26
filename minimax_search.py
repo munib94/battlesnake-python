@@ -248,7 +248,7 @@ def minimax(game_state: typing.Dict, depth: int, alpha: float=NEGATIVE_INFINITY,
     """
     # Get list of food nodes
     foods = game_state["board"]["food"]
-    start = game_state["you"]["head"]
+    start = game_state['you']['body'][0]
 
     max_possible_paths = []
     min_possible_paths = []
