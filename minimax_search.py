@@ -3,7 +3,7 @@ import copy
 
 import numpy as np
 
-from helpers import manhattan_distance, is_point_on_board, is_terminal
+from helpers2 import manhattan_distance, is_point_on_board, is_terminal
 
 
 # Constants for heuristic evaluation
