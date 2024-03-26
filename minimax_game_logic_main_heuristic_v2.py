@@ -23,15 +23,17 @@ NEGATIVE_INFINITY = -float('inf')
 def info() -> typing.Dict:
     return {
         "apiversion": "1",
-        "author": "",  # Your Battlesnake Username
-        "color": "#888888",  # Choose color
+        "author": "Team 8",  # Your Battlesnake Username
+        "color": "#800080",  # Choose color
         "head": "default",  # Choose head
         "tail": "default",  # Choose tail
     }
 
+# Start of the game
 def start(game_state: typing.Dict):
     print("GAME START")
 
+# End of the game
 def end(game_state: typing.Dict):
     print("GAME OVER\n")
 
