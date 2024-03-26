@@ -15,15 +15,15 @@ class Node:
     Defines the node class.
 
     Attributes:
-        parent_i:
+      parent_i:
         The x position of the parent node.
-        parent_j:
+      parent_j:
         The y position of the parent node.
-        f:
+      f:
         The total cost from the start node to the goal node (g + h).
-        g:
+      g:
         The actual cost from the start node to the current node.
-        h:
+      h:
         The heuristic cost from the current node to the goal node
     """
 
@@ -43,9 +43,9 @@ def trace_path(node_details: Node, goal: dict) -> list[tuple[int, int]]:
     Traces the path from source to destination.
 
     Args:
-        node_details:
+      node_details:
         Information about the node.
-        dest:
+      dest:
         The goal node.
 
     Returns:
@@ -82,11 +82,11 @@ def a_star_search(game_state: typing.Dict, src: dict, dest: dict) -> list[tuple[
     Implement the A* search algorithm.
 
     Args:
-        game_state:
+      game_state:
         Information about the state space of the game.
-        src:
+      src:
         The starting node position.
-        dest:
+      dest:
         The goal node position.
 
     Returns:

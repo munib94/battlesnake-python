@@ -50,41 +50,7 @@ def get_safe_moves(game_state: typing.Dict) -> typing.List[str]:
             if not any(part['x'] == new_x and part['y'] == new_y for part in my_body):
                 safe_moves.append(move)
 
-        # Prioritize food if health is low
-        # if game_state['you']['health'] < 60:
-        #     food_positions = game_state['board']['food']
-        #     if food_positions:  # Check if there is food available
-        #         food_directions = prioritize_food(my_head, food_positions, safe_moves)
-        #         if food_directions:  # If there are safe moves leading to food, prioritize them
-        #             return food_directions
-
     return safe_moves
-
-
-# def prioritize_food(head: dict, food_positions: list, safe_moves: list, game_state: typing.Dict) -> list:
-#     closest_food = min(food_positions, key=lambda food: manhattan_distance(head, food))
-#     preferred_moves = []
-
-#     # Consider the snake's current health
-#     health = game_state['you']['health']
-
-#     for move in safe_moves:
-#         new_head = dict(head)  # Copy current head position
-#         if move == 'up':
-#             new_head['y'] -= 1
-#         elif move == 'down':
-#             new_head['y'] += 1
-#         elif move == 'left':
-#             new_head['x'] -= 1
-#         elif move == 'right':
-#             new_head['x'] += 1
-        
-#         # Prioritize moves that do not lead into dead-ends and are closer to food
-#         if not is_dead_end(new_head, game_state) and manhattan_distance(new_head, closest_food) < manhattan_distance(head, closest_food):
-#             preferred_moves.append(move)
-    
-#     # Return moves that head towards food and do not result in immediate dead-ends
-#     return preferred_moves or safe_moves  # If no preferred moves, fallback to original safe moves
 
 
 def is_dead_end(head: dict, game_state: typing.Dict) -> bool:
