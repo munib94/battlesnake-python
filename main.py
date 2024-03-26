@@ -15,7 +15,7 @@ import typing
 import sys
 
 from a_star import a_star_search, Node, trace_path
-
+from minimax_search import minimax
 
 # info is called when you create your Battlesnake on play.battlesnake.com
 # and controls your Battlesnake's appearance
@@ -25,10 +25,10 @@ def info() -> typing.Dict:
 
     return {
         "apiversion": "1",
-        "author": "",  # TODO: Your Battlesnake Username
-        "color": "#888888",  # TODO: Choose color
-        "head": "default",  # TODO: Choose head
-        "tail": "default",  # TODO: Choose tail
+        "author": "Team 8",  # Your Battlesnake Username
+        "color": "#800080",  # Choose color
+        "head": "default",  # Choose head
+        "tail": "default",  # Choose tail
     }
 
 
@@ -45,37 +45,42 @@ def end(game_state: typing.Dict):
 # move is called on every turn and returns your next move
 # Valid moves are "up", "down", "left", or "right"
 # See https://docs.battlesnake.com/api/example-move for available data
+# def move(game_state: typing.Dict) -> typing.Dict:
+#     # Get list of food nodes
+#     foods = game_state["board"]["food"]
+#     start = game_state["you"]["head"]
+
+#     possible_moves = []
+#     path_lengths = []
+#     # Perform A* search for all foods. This will return optimal paths to all foods.
+#     for food in foods:
+#         result = a_star_search(game_state, start, food)
+#         if result is not None:
+#             possible_moves.append(result)
+#             path_lengths.append(len(result))
+
+#     # Get shortest path from all possible paths and the corresponding next move
+#     # best_move = possible_moves[f_scores.index(best_f_score)]
+#     shortest_path = min(path_lengths)
+#     best_path = possible_moves[path_lengths.index(shortest_path)]
+#     best_move = best_path[1]
+#     row, col = best_move[0] - start["x"], best_move[1] - start["y"]
+#     if row == 1:
+#         next_move = "right"
+#     elif row == -1:
+#         next_move = "left"
+#     elif col == 1:
+#         next_move = "up"
+#     elif col == -1:
+#         next_move = "down"
+
+#     print(f"MOVE {game_state['turn']}: {next_move}")
+#     return {"move": next_move or "down"}
+
+
 def move(game_state: typing.Dict) -> typing.Dict:
-    # Get list of food nodes
-    foods = game_state["board"]["food"]
-    start = game_state["you"]["head"]
-
-    possible_moves = []
-    path_lengths = []
-    # Perform A* search for all foods. This will return optimal paths to all foods.
-    for food in foods:
-        result = a_star_search(game_state, start, food)
-        if result is not None:
-            possible_moves.append(result)
-            path_lengths.append(len(result))
-
-    # Get shortest path from all possible paths and the corresponding next move
-    # best_move = possible_moves[f_scores.index(best_f_score)]
-    shortest_path = min(path_lengths)
-    best_path = possible_moves[path_lengths.index(shortest_path)]
-    best_move = best_path[1]
-    row, col = best_move[0] - start["x"], best_move[1] - start["y"]
-    if row == 1:
-        next_move = "right"
-    elif row == -1:
-        next_move = "left"
-    elif col == 1:
-        next_move = "up"
-    elif col == -1:
-        next_move = "down"
-
-    print(f"MOVE {game_state['turn']}: {next_move}")
-    return {"move": next_move or "down"}
+    _, next_move = minimax(game_state, depth=3) # Adjust the depth accordingly
+    return {"move": next_move or "down"} # Fallback to "down" if no move is found
 
 
 # Start server when `python main.py` is run
