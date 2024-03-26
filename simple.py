@@ -106,7 +106,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 if __name__ == "__main__":
     from server import run_server
 
-    port = "8000"
+    port = "8001"
     for i in range(len(sys.argv) - 1):
         if sys.argv[i] == '--port':
             port = sys.argv[i+1]
