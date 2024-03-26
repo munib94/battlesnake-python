@@ -1,3 +1,5 @@
+
+
 # Battlesnake Python Starter Project
 
 An official Battlesnake template written in Python. Get started at [play.battlesnake.com](https://play.battlesnake.com).
@@ -5,6 +7,18 @@ An official Battlesnake template written in Python. Get started at [play.battles
 ![Battlesnake Logo](https://media.battlesnake.com/social/StarterSnakeGitHubRepos_Python.png)
 
 This project is a great starting point for anyone wanting to program their first Battlesnake in Python. It can be run locally or easily deployed to a cloud provider of your choosing. See the [Battlesnake API Docs](https://docs.battlesnake.com/api) for more detail. 
+
+## How to run the files
+
+1. `python minimax_game_logic_main_heuristic_v2.py --port 8000`
+2. `python simple.py --port 8001`
+
+3. Link between two snake and visualize: Make sure the compiled battlesnake is on the same folder. See the instructions in assignment pdf. 
+```bash
+./battlesnake play -W 11 -H 11 --name "snake1" --url http://127.0.0.1:8000 --name "snake2" --url http://127.0.0.1:8001
+ --browser
+``` 
+
 
 [![Run on Replit](https://repl.it/badge/github/BattlesnakeOfficial/starter-snake-python)](https://replit.com/@Battlesnake/starter-snake-python)
 
